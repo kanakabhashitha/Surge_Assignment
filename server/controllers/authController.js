@@ -2,25 +2,9 @@ import User from "../models/User.js";
 import { BadRequestError, UnAuthenticatedError } from "../errors/index.js";
 
 const register = async (req, res, next) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    password,
-    dateOfBirth,
-    accountType,
-    mobile,
-  } = req.body;
+  const { firstName, email, password } = req.body;
 
-  if (
-    !firstName ||
-    !lastName ||
-    !email ||
-    !password ||
-    !dateOfBirth ||
-    !accountType ||
-    !mobile
-  ) {
+  if (!firstName || !email || !password) {
     const err = new BadRequestError("Please provide all values");
     next(err);
   }
@@ -38,11 +22,7 @@ const register = async (req, res, next) => {
     res.status(201).json({
       user: {
         firstName: user.firstName,
-        lastName: user.lastName,
         email: user.email,
-        dateOfBirth: user.dateOfBirth,
-        mobile: user.mobile,
-        accountType: user.accountType,
         status: user.status,
       },
       token,
@@ -74,25 +54,36 @@ const login = async (req, res, next) => {
   }
 };
 
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
   try {
-    const { email, name, lastName } = req.body;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      dateOfBirth,
+      mobile,
+      status,
+    } = req.body;
 
-    if (!email || !name || !lastName) {
+    if (!firstName || !lastName || !email || !dateOfBirth || !mobile) {
       throw new BadRequestError("Please provide all values");
     }
 
-    const admin = await Admin.findOne({ _id: req.admin.adminId });
+    const user = await User.findOne({ _id: req.user.userId });
 
-    admin.email = email;
-    admin.name = name;
-    admin.lastName = lastName;
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.email = email;
+    user.dateOfBirth = dateOfBirth;
+    user.mobile = mobile;
+    user.status = status;
 
-    await admin.save();
+    await user.save();
 
-    const token = admin.createJWT();
+    const token = user.createJWT();
 
-    res.status(200).json({ admin, token });
+    res.status(200).json({ user, token });
   } catch (error) {
     next(error);
   }

@@ -14,9 +14,9 @@ const UserSchema = new mongoose.Schema({
 
   lastName: {
     type: String,
-    required: [true, "Please provide last name"],
     minlength: 3,
     maxlength: 20,
+    default: "Last Name",
     trim: true,
   },
 
@@ -39,7 +39,7 @@ const UserSchema = new mongoose.Schema({
 
   dateOfBirth: {
     type: Date,
-    required: [true, "Please provide password"],
+    default: "1995-04-18",
     trim: true,
   },
 
@@ -55,9 +55,8 @@ const UserSchema = new mongoose.Schema({
 
   accountType: {
     type: String,
-    required: [true, "Please provide account type"],
     enum: ["Admin", "Student"],
-    default: "Admin",
+    default: "Student",
   },
 
   status: {
