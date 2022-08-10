@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
 import { Logo, FormRow, FormRowSelect, Alert } from "../components";
-
+import { useAppContext } from "../context/appContext";
 import Wrapper from "../assets/wrappers/LoginPage";
 
 const initialState = {
@@ -13,6 +13,9 @@ const initialState = {
 
 const Login = () => {
   const [values, setValues] = useState(initialState);
+
+  const { user, isLoading, showAlert, displayAlert, loginUser } =
+    useAppContext();
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
