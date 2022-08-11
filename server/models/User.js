@@ -63,6 +63,11 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+
+  verify: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 UserSchema.pre("save", async function () {
