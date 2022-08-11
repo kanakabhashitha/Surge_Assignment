@@ -55,14 +55,14 @@ const register = async (req, res, next) => {
 const verifyEmail = async (req, res, next) => {
   try {
     const { temporaryPassword } = req.body;
-    const { id: userId } = req.params;
+    // const { id: userId } = req.params;
 
-    if (!userId || !temporaryPassword) {
+    if (!temporaryPassword) {
       const err = new BadRequestError("Please provide all values");
       next(err);
     }
 
-    const user = await User.findOne({ _id: userId });
+    const user = await User.findOne({ _id: req.user.userId });
     if (!user) {
       throw new UnAuthenticatedError("Invalid Credentials");
     }
@@ -72,13 +72,13 @@ const verifyEmail = async (req, res, next) => {
       next(err);
     }
 
-    const token = await Verification.findOne({ createdBy: user._id });
+    const TmpToken = await Verification.findOne({ createdBy: user._id });
     if (user.verify) {
       const err = new BadRequestError("Sorry! user not found");
       next(err);
     }
 
-    const isTokenCorrect = await token.compareTemporaryPassword(
+    const isTokenCorrect = await TmpToken.compareTemporaryPassword(
       temporaryPassword
     );
 
@@ -88,10 +88,12 @@ const verifyEmail = async (req, res, next) => {
 
     user.verify = true;
 
-    await Verification.findByIdAndDelete(token._id);
+    await Verification.findByIdAndDelete(TmpToken._id);
     await user.save();
 
-    res.status(200).json({ msg: "Verification successfully" });
+    const token = user.createJWT();
+
+    res.status(200).json({ msg: "Verification successfully", token });
 
     mailTransport().sendMail({
       from: process.env.MAILTRAP_USER,

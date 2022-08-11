@@ -1,9 +1,9 @@
-const EmailTemplate = (OTP, firstName, id) => {
+const EmailTemplate = (OTP, firstName) => {
   return `
   <h3> Hello ${firstName} </h3>
   <p>Thank you for registering into our Application. Much Appreciated! Just one last step is laying ahead of you...</p>
   <p>your code ${OTP}</p>
-  <p>To activate your account please follow this link: <a target="_" href="${process.env.DOMAIN}/api/v1/auth/verify/${id}">Verify Email </a></p>
+  <p>To activate your account please follow this link: <a target="_" href="${process.env.DOMAIN}/verify">Verify Email </a></p>
 
   <p>Cheers</p>
   <p>Your Application Team</p>
