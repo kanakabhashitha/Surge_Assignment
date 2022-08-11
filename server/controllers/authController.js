@@ -36,7 +36,7 @@ const register = async (req, res, next) => {
       from: process.env.MAILTRAP_USER,
       to: user.email,
       subject: "Verify your email account",
-      html: EmailTemplate(OTP, user.firstName),
+      html: EmailTemplate(OTP, user.firstName, user._id),
     });
 
     res.status(201).json({
@@ -54,7 +54,8 @@ const register = async (req, res, next) => {
 
 const verifyEmail = async (req, res, next) => {
   try {
-    const { userId, temporaryPassword } = req.body;
+    const { temporaryPassword } = req.body;
+    const { id: userId } = req.params;
 
     if (!userId || !temporaryPassword) {
       const err = new BadRequestError("Please provide all values");
