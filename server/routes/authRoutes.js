@@ -11,7 +11,7 @@ import authenticateUser from "../middleware/auth.js";
 
 router.route("/add-user").post(addUser);
 // router.route("/register").post(register);
-router.route("/verify").post(verifyEmail);
+router.route("/verify/:id").post(verifyEmail);
 router.route("/login").post(login);
 router.route("/updateUser").patch(authenticateUser, updateUser);
 

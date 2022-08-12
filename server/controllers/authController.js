@@ -22,6 +22,7 @@ const addUser = async (req, res, next) => {
   try {
     const OTP = generateOtp();
 
+    // const user = new User({});
     const user = await User.create(req.body);
     const token = user.createJWT();
 
@@ -56,15 +57,15 @@ const addUser = async (req, res, next) => {
 
 const verifyEmail = async (req, res, next) => {
   try {
-    const { temporaryPassword, userId } = req.body;
-    // const { id: userId } = req.params;
+    const { temporaryPassword } = req.body;
+    const { id: userId } = req.params;
 
     if (!temporaryPassword || !userId) {
       const err = new BadRequestError("Please provide all values");
       next(err);
     }
 
-    const user = await User.findOne({ _id: userId });
+    const user = await User.findOne({ userId });
     if (!user) {
       throw new UnAuthenticatedError("Invalid Credentials");
     }

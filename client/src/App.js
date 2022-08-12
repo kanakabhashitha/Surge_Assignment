@@ -11,7 +11,7 @@ function App() {
         </Route>
         <Route path="/register" element={<Register />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/verify" element={<Verification />} />
+        <Route path="/verify/:id" element={<Verification />} />
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<Error />} />
       </Routes>

@@ -97,7 +97,7 @@ const AppProvider = ({ children }) => {
     dispatch({ type: VERIFY_USER_BEGIN });
 
     try {
-      const response = await axios.post("api/v1/auth/verify", verifyDetails);
+      const response = await axios.post(verifyDetails.url, verifyDetails);
       console.log(response);
       const { token } = response.data;
 

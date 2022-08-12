@@ -14,22 +14,14 @@ const initialState = {
   mobile: "",
   accountType: "",
   status: "",
-  //   isMember: true,
   showAlert: false,
 };
 
 const Register = () => {
   const [values, setValues] = useState(initialState);
   const navigate = useNavigate();
-  const {
-    user,
-    isLoading,
-    showAlert,
-    displayAlert,
-    registerUser,
-    loginUser,
-    setupUser,
-  } = useAppContext();
+  const { user, isLoading, showAlert, displayAlert, registerUser } =
+    useAppContext();
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -52,34 +44,34 @@ const Register = () => {
     const currentUser = { name, email, password };
 
     if (isMember) {
-      setupUser({
-        currentUser,
-        endPoint: "login",
-        alertText: "Login Successful! Redirecting...",
-      });
-    } else {
-      setupUser({
-        currentUser,
-        endPoint: "register",
-        alertText: "User Created! Redirecting...",
-      });
+      //   setupUser({
+      //     currentUser,
+      //     endPoint: "login",
+      //     alertText: "Login Successful! Redirecting...",
+      //   });
+      // } else {
+      //   setupUser({
+      //     currentUser,
+      //     endPoint: "register",
+      //     alertText: "User Created! Redirecting...",
+      //   });
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      setTimeout(() => {
-        navigate("/");
-      }, 3000);
-    }
-  }, [user, navigate]);
+  // useEffect(() => {
+  //   if (user) {
+  //     setTimeout(() => {
+  //       navigate("/");
+  //     }, 3000);
+  //   }
+  // }, [user, navigate]);
 
   return (
     <Wrapper>
       <form className="form" onSubmit={onSubmit}>
         <Logo />
 
-        {values.isMember ? <h3> Login</h3> : <h3>Register</h3>}
+        <h3>Register</h3>
 
         {showAlert && <Alert />}
 
@@ -89,7 +81,7 @@ const Register = () => {
           <FormRow
             type="text"
             name="fisrtName"
-            value={values.name}
+            value={user.firstName}
             handleChange={handleChange}
           />
         )}
@@ -98,7 +90,7 @@ const Register = () => {
         <FormRow
           type="email"
           name="email"
-          value={values.email}
+          value={user.email}
           handleChange={handleChange}
         />
 
@@ -113,6 +105,7 @@ const Register = () => {
         <FormRow
           type="password"
           name="cpassword"
+          labelText="confirm password"
           value={values.cpassword}
           handleChange={handleChange}
         />
@@ -120,14 +113,6 @@ const Register = () => {
         <button type="submit" className="btn btn-block" disabled={isLoading}>
           submit
         </button>
-
-        <p>
-          {values.isMember ? "Not a member yet?" : "Already a member?"}
-
-          <button type="button" onClick={toggleMember} className="member-btn">
-            {values.isMember ? "Register" : "Login"}
-          </button>
-        </p>
       </form>
     </Wrapper>
   );

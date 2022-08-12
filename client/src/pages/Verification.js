@@ -2,14 +2,15 @@ import { React, useState } from "react";
 import { Logo, Alert } from "../components";
 import { useAppContext } from "../context/appContext";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import OtpInput from "react-otp-input";
 import Wrapper from "../assets/wrappers/VerifyForm";
 
 const Verification = () => {
-  const { user, verifyUser, showAlert, displayAlert, isLoading } =
-    useAppContext();
+  const { verifyUser, showAlert, displayAlert, isLoading } = useAppContext();
   const [temporaryPassword, setTemporaryPassword] = useState("");
   const navigate = useNavigate();
+  const param = useParams();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -18,13 +19,14 @@ const Verification = () => {
       return;
     }
 
-    const userId = user._id;
-    const verifyDetails = { temporaryPassword, userId };
+    const id = param.id;
+    const url = `http://localhost:3000/api/v1/auth/verify/${id}`;
+    const verifyDetails = { temporaryPassword, url };
     verifyUser(verifyDetails);
 
     setTimeout(() => {
-      navigate("/login");
-    }, 3000);
+      navigate("/register");
+    }, 4000);
   };
 
   return (
