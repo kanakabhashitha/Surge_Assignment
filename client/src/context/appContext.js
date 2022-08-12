@@ -12,6 +12,10 @@ import {
   RESET_USER_BEGIN,
   RESET_USER_SUCCESS,
   RESET_USER_ERROR,
+  LOGIN_USER_BEGIN,
+  LOGIN_USER_SUCCESS,
+  LOGIN_USER_ERROR,
+  LOGOUT_USER,
   CLEAR_VALUES,
   HANDLE_CHANGE,
 } from "./actions";
@@ -121,6 +125,7 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  //reset user details
   const resetUser = async (currentUser) => {
     dispatch({ type: RESET_USER_BEGIN });
     try {
@@ -149,6 +154,38 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  //login user
+  const loginUser = async (currentUser) => {
+    dispatch({ type: LOGIN_USER_BEGIN });
+
+    try {
+      const response = await axios.post("/api/v1/auth/login", currentUser);
+      console.log(response);
+      const { user, token } = response.data;
+
+      dispatch({
+        type: LOGIN_USER_SUCCESS,
+        payload: { user, token },
+      });
+
+      //local storage
+      addUserToLocalStorage({ user, token });
+    } catch (error) {
+      console.log(error.response);
+      dispatch({
+        type: LOGIN_USER_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+    clearAlert();
+  };
+
+  //logout user
+  const logoutUser = () => {
+    dispatch({ type: LOGOUT_USER });
+    removeUserFromLocalStorage();
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -157,6 +194,8 @@ const AppProvider = ({ children }) => {
         addUser,
         verifyUser,
         resetUser,
+        loginUser,
+        logoutUser,
       }}
     >
       {children}

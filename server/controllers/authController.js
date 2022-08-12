@@ -7,6 +7,7 @@ import {
 } from "../errors/index.js";
 import { generateOtp, mailTransport } from "../utils/Mail.js";
 import { EmailTemplate, SuccessEmailTemplate } from "../utils/EmailTemplate.js";
+import bcrypt from "bcryptjs";
 
 const addUser = async (req, res, next) => {
   const { firstName, email } = req.body;
@@ -104,25 +105,53 @@ const verifyEmail = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  // try {
-  //   const { email, password, accountType } = req.body;
-  //   if (!email || !password || !accountType) {
-  //     throw new BadRequestError("Please provide all values");
-  //   }
-  //   const user = await User.findOne({ email }).select("+password");
-  //   if (!user) {
-  //     throw new UnAuthenticatedError("Invalid Credentials");
-  //   }
-  //   const isPasswordCorrect = await user.comparePassword(password);
-  //   if (!isPasswordCorrect) {
-  //     throw new UnAuthenticatedError("Invalid Credentials");
-  //   }
-  //   const token = user.createJWT();
-  //   user.password = undefined;
-  //   res.status(200).json({ user, token });
-  // } catch (error) {
-  //   next(error);
-  // }
+  try {
+    const { email, password, accountType } = req.body;
+
+    if (!email || !password || !accountType) {
+      throw new BadRequestError("Please provide all values");
+    }
+
+    if (accountType != "Admin") {
+      const user = await User.findOne({ email }).select("+password");
+      if (!user) {
+        throw new UnAuthenticatedError("Invalid Credentials");
+      }
+
+      if (user.accountType != accountType) {
+        throw new UnAuthenticatedError("Invalid Account Type");
+      }
+
+      const isPasswordCorrect = await user.comparePassword(password);
+      if (!isPasswordCorrect) {
+        throw new UnAuthenticatedError("Invalid Credentials");
+      }
+      const token = user.createJWT();
+      user.password = undefined;
+      res.status(200).json({ user, token });
+    } else {
+      const tempEmail = "admin@gmail.com";
+      const tempPass = "admin";
+
+      if (email != tempEmail && password != tempPass) {
+        throw new UnAuthenticatedError("Invalid Credentials");
+      }
+
+      const user = new User({
+        email: tempEmail,
+        password: tempPass,
+        accountType: "Admin",
+        firstName: "Admin",
+        status: true,
+        verify: true,
+      });
+      const token = user.createJWT();
+      user.password = undefined;
+      res.status(200).json({ user, token });
+    }
+  } catch (error) {
+    next(error);
+  }
 };
 
 const resetUser = async (req, res, next) => {
@@ -167,13 +196,16 @@ const resetUser = async (req, res, next) => {
       throw new UnAuthenticatedError("Invalid temporary password");
     }
 
+    const salt = await bcrypt.genSalt(10);
+    const password = await bcrypt.hash(newPassword, salt);
+
     const updateUser = {
       firstName: firstName,
       lastName: lastName,
       dateOfBirth: dateOfBirth,
       mobile: mobile,
       status: true,
-      password: newPassword,
+      password: password,
     };
 
     const user = await User.findOneAndUpdate({ _id: id }, updateUser, {

@@ -7,7 +7,7 @@ import success from "../assets/images/success.svg";
 import Wrapper from "../assets/wrappers/VerifyPage";
 
 const Verification = () => {
-  const { verifyUser, showAlert, displayAlert, isLoading, verify } =
+  const { user, verifyUser, showAlert, displayAlert, isLoading, verify } =
     useAppContext();
   const navigate = useNavigate();
   const param = useParams();
@@ -24,7 +24,11 @@ const Verification = () => {
     displayAlert();
 
     setTimeout(() => {
-      navigate(`/reset-user/${id}`);
+      if (!user || !user.status) {
+        navigate(`/reset-user/${id}`);
+      } else {
+        navigate("/");
+      }
     }, 4000);
   }, [param, navigate]);
 
