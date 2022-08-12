@@ -1,24 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import Wrapper from "../assets/wrappers/Sidebar";
 import { useAppContext } from "../context/appContext";
-import NavLinks from "./NavLinks";
+import { AdminTab, StudentTab } from "../components/index";
+
 import Logo from "./Logo";
 
 function Sidebar(props) {
-  const { showSidebar } = useAppContext();
+  const { user } = useAppContext();
 
   return (
     <Wrapper>
-      <div
-        className={
-          showSidebar ? "sidebar-container " : "sidebar-container show-sidebar"
-        }
-      >
+      <div className="sidebar-container show-sidebar">
         <div className="content">
           <header>
             <Logo />
           </header>
-          <NavLinks />
+          {user.firstName === "Admin" ? <AdminTab /> : <StudentTab />}
         </div>
       </div>
     </Wrapper>

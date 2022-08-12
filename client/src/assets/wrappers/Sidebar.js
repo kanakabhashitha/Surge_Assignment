@@ -18,6 +18,18 @@ const Wrapper = styled.aside`
   .show-sidebar {
     margin-left: 0;
   }
+  .Student-hide {
+    display: none !important;
+  }
+
+  .Admin-hide {
+    display: none;
+  }
+
+  .show-tab {
+    display: block;
+  }
+
   header {
     height: 6rem;
     display: flex;
