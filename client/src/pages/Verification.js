@@ -11,9 +11,9 @@ const Verification = () => {
     useAppContext();
   const navigate = useNavigate();
   const param = useParams();
+  const id = param.id;
 
   const emailVerify = () => {
-    const id = param.id;
     const url = `http://localhost:3000/api/v1/auth/verify/${id}`;
     verifyUser(url);
   };
@@ -24,7 +24,7 @@ const Verification = () => {
     displayAlert();
 
     setTimeout(() => {
-      navigate("/register");
+      navigate(`/reset-user/${id}`);
     }, 4000);
   }, [param, navigate]);
 

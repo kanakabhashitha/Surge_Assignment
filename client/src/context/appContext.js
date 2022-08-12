@@ -9,6 +9,9 @@ import {
   VERIFY_USER_BEGIN,
   VERIFY_USER_SUCCESS,
   VERIFY_USER_ERROR,
+  RESET_USER_BEGIN,
+  RESET_USER_SUCCESS,
+  RESET_USER_ERROR,
   CLEAR_VALUES,
   HANDLE_CHANGE,
 } from "./actions";
@@ -56,7 +59,7 @@ const AppProvider = ({ children }) => {
   };
 
   //save user to local storage
-  const addUserToLocalStorage = ({ user, token, location }) => {
+  const addUserToLocalStorage = ({ user, token }) => {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("token", token);
   };
@@ -73,7 +76,7 @@ const AppProvider = ({ children }) => {
 
     try {
       const response = await axios.post("/api/v1/auth/add-user", currentUser);
-      console.log(response);
+
       const { user, token } = response.data;
 
       dispatch({
@@ -118,6 +121,34 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const resetUser = async (currentUser) => {
+    dispatch({ type: RESET_USER_BEGIN });
+    try {
+      const response = await axios.patch(
+        "/api/v1/auth/reset-user",
+        currentUser
+      );
+
+      const { user, token } = response.data;
+
+      dispatch({
+        type: RESET_USER_SUCCESS,
+        payload: { user, token },
+      });
+      addUserToLocalStorage({ user, token });
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: RESET_USER_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+      console.log({ msg: error.response.data.msg });
+      removeUserFromLocalStorage();
+    }
+    clearAlert();
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -125,6 +156,7 @@ const AppProvider = ({ children }) => {
         displayAlert,
         addUser,
         verifyUser,
+        resetUser,
       }}
     >
       {children}

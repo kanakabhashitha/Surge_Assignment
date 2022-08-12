@@ -239,6 +239,12 @@ ul {
 .btn-block {
   height: 35px;
 }
+
+.form-input::-webkit-inner-spin-button,
+.form-input::-webkit-outer-spin-button{
+  -webkit-appearance:none;
+}
+
 .form-row {
   margin-bottom: 1rem;
 }

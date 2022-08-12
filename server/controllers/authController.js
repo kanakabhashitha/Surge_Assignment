@@ -1,6 +1,10 @@
 import User from "../models/User.js";
 import Verification from "../models/Verification.js";
-import { BadRequestError, UnAuthenticatedError } from "../errors/index.js";
+import {
+  BadRequestError,
+  UnAuthenticatedError,
+  NotFoundError,
+} from "../errors/index.js";
 import { generateOtp, mailTransport } from "../utils/Mail.js";
 import { EmailTemplate, SuccessEmailTemplate } from "../utils/EmailTemplate.js";
 
@@ -100,33 +104,33 @@ const verifyEmail = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  try {
-    const { email, password, accountType } = req.body;
-    if (!email || !password || !accountType) {
-      throw new BadRequestError("Please provide all values");
-    }
-    const user = await User.findOne({ email }).select("+password");
-    if (!user) {
-      throw new UnAuthenticatedError("Invalid Credentials");
-    }
-    const isPasswordCorrect = await user.comparePassword(password);
-    if (!isPasswordCorrect) {
-      throw new UnAuthenticatedError("Invalid Credentials");
-    }
-    const token = user.createJWT();
-    user.password = undefined;
-    res.status(200).json({ user, token });
-  } catch (error) {
-    next(error);
-  }
+  // try {
+  //   const { email, password, accountType } = req.body;
+  //   if (!email || !password || !accountType) {
+  //     throw new BadRequestError("Please provide all values");
+  //   }
+  //   const user = await User.findOne({ email }).select("+password");
+  //   if (!user) {
+  //     throw new UnAuthenticatedError("Invalid Credentials");
+  //   }
+  //   const isPasswordCorrect = await user.comparePassword(password);
+  //   if (!isPasswordCorrect) {
+  //     throw new UnAuthenticatedError("Invalid Credentials");
+  //   }
+  //   const token = user.createJWT();
+  //   user.password = undefined;
+  //   res.status(200).json({ user, token });
+  // } catch (error) {
+  //   next(error);
+  // }
 };
 
 const resetUser = async (req, res, next) => {
   try {
     const {
+      id,
       firstName,
       lastName,
-      email,
       tempPassword,
       newPassword,
       confirmPassword,
@@ -135,6 +139,7 @@ const resetUser = async (req, res, next) => {
     } = req.body;
 
     if (
+      !id ||
       !firstName ||
       !lastName ||
       !dateOfBirth ||
@@ -143,29 +148,40 @@ const resetUser = async (req, res, next) => {
       !newPassword ||
       !confirmPassword
     ) {
-      throw new BadRequestError("Please provide all values");
-    }
-
-    const user = await User.findOne({ email }).select("+password");
-
-    if (!confirmPassword === newPassword) {
-      const err = new BadRequestError("Password is mismatch");
+      const err = new BadRequestError("Please provide all values");
       next(err);
     }
 
-    const isTempPassCorrect = await user.comparePassword(tempPassword);
+    const userDetails = await User.findOne({ _id: id }).select("+password");
+    if (!userDetails) {
+      const err = new NotFoundError(`No user with id :${id}`);
+      next(err);
+    }
+
+    if (confirmPassword != newPassword) {
+      throw new BadRequestError("Password is mismatch");
+    }
+
+    const isTempPassCorrect = await userDetails.comparePassword(tempPassword);
     if (!isTempPassCorrect) {
       throw new UnAuthenticatedError("Invalid temporary password");
     }
 
-    user.firstName = firstName;
-    user.lastName = lastName;
-    user.dateOfBirth = dateOfBirth;
-    user.mobile = mobile;
-    user.status = true;
-    user.password = newPassword;
+    const updateUser = {
+      firstName: firstName,
+      lastName: lastName,
+      dateOfBirth: dateOfBirth,
+      mobile: mobile,
+      status: true,
+      password: newPassword,
+    };
 
-    await user.save();
+    const user = await User.findOneAndUpdate({ _id: id }, updateUser, {
+      new: true,
+      runValidators: true,
+    });
+
+    // await user.save();
     const token = user.createJWT();
 
     res.status(200).json({ user, token });

@@ -4,13 +4,13 @@ import {
   ADD_USER_BEGIN,
   ADD_USER_SUCCESS,
   ADD_USER_ERROR,
-  REGISTER_USER_BEGIN,
-  REGISTER_USER_SUCCESS,
-  REGISTER_USER_ERROR,
-  LOGIN_USER_BEGIN,
+  RESET_USER_BEGIN,
+  RESET_USER_SUCCESS,
+  RESET_USER_ERROR,
   VERIFY_USER_BEGIN,
   VERIFY_USER_SUCCESS,
   VERIFY_USER_ERROR,
+  LOGIN_USER_BEGIN,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
 } from "./actions";
@@ -84,6 +84,31 @@ const reducer = (state, action) => {
   }
 
   if (action.type === VERIFY_USER_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
+
+  if (action.type === RESET_USER_BEGIN) {
+    return { ...state, isLoading: true };
+  }
+
+  if (action.type === RESET_USER_SUCCESS) {
+    return {
+      ...state,
+      isLoading: true,
+      token: action.payload.token,
+      user: action.payload.user,
+      showAlert: true,
+      alertType: "success",
+      alertText: "Reset Successful! Redirecting...",
+    };
+  }
+  if (action.type === RESET_USER_ERROR) {
     return {
       ...state,
       isLoading: false,
