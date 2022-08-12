@@ -4,10 +4,10 @@ import { BadRequestError, UnAuthenticatedError } from "../errors/index.js";
 import { generateOtp, mailTransport } from "../utils/Mail.js";
 import { EmailTemplate, SuccessEmailTemplate } from "../utils/EmailTemplate.js";
 
-const register = async (req, res, next) => {
-  const { firstName, email, password } = req.body;
+const addUser = async (req, res, next) => {
+  const { firstName, email } = req.body;
 
-  if (!firstName || !email || !password) {
+  if (!firstName || !email) {
     const err = new BadRequestError("Please provide all values");
     next(err);
   }
@@ -44,8 +44,10 @@ const register = async (req, res, next) => {
         firstName: user.firstName,
         email: user.email,
         status: user.status,
+        _id: user._id,
       },
       token,
+      msg: "User add successfully",
     });
   } catch (error) {
     next(error);
@@ -54,15 +56,15 @@ const register = async (req, res, next) => {
 
 const verifyEmail = async (req, res, next) => {
   try {
-    const { temporaryPassword } = req.body;
+    const { temporaryPassword, userId } = req.body;
     // const { id: userId } = req.params;
 
-    if (!temporaryPassword) {
+    if (!temporaryPassword || !userId) {
       const err = new BadRequestError("Please provide all values");
       next(err);
     }
 
-    const user = await User.findOne({ _id: req.user.userId });
+    const user = await User.findOne({ _id: userId });
     if (!user) {
       throw new UnAuthenticatedError("Invalid Credentials");
     }
@@ -91,9 +93,7 @@ const verifyEmail = async (req, res, next) => {
     await Verification.findByIdAndDelete(TmpToken._id);
     await user.save();
 
-    const token = user.createJWT();
-
-    res.status(200).json({ msg: "Verification successfully", token });
+    res.status(200).json({ msg: "Verification successfully" });
 
     mailTransport().sendMail({
       from: process.env.MAILTRAP_USER,
@@ -163,4 +163,4 @@ const updateUser = async (req, res, next) => {
   }
 };
 
-export { register, verifyEmail, login, updateUser };
+export { addUser, verifyEmail, login, updateUser };

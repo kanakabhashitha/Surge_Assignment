@@ -1,6 +1,9 @@
 import {
   DISPLAY_ALERT,
   CLEAR_ALERT,
+  ADD_USER_BEGIN,
+  ADD_USER_SUCCESS,
+  ADD_USER_ERROR,
   REGISTER_USER_BEGIN,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_ERROR,
@@ -33,6 +36,35 @@ const reducer = (state, action) => {
     };
   }
 
+  if (action.type === ADD_USER_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+    };
+  }
+
+  if (action.type === ADD_USER_SUCCESS) {
+    return {
+      ...state,
+      user: action.payload.user,
+      token: action.payload.token,
+      isLoading: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: "User Add Successful",
+    };
+  }
+
+  if (action.type === ADD_USER_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
+
   if (action.type === VERIFY_USER_BEGIN) {
     return {
       ...state,
@@ -47,7 +79,7 @@ const reducer = (state, action) => {
       isLoading: false,
       showAlert: true,
       alertType: "success",
-      alertText: "Login Successful! Redirecting...",
+      alertText: "Verify Successful! Redirecting...",
     };
   }
 

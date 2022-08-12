@@ -13,7 +13,7 @@ const links = [
   },
   {
     id: 2,
-    text: "add user",
+    text: "add student",
     path: "add-user",
     icon: <RiGroupLine />,
   },

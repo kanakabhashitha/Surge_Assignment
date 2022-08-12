@@ -6,17 +6,21 @@ import OtpInput from "react-otp-input";
 import Wrapper from "../assets/wrappers/VerifyForm";
 
 const Verification = () => {
-  const { verifyUser, showAlert, displayAlert, isLoading } = useAppContext();
-  const [OTP, setOTP] = useState("");
+  const { user, verifyUser, showAlert, displayAlert, isLoading } =
+    useAppContext();
+  const [temporaryPassword, setTemporaryPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!OTP) {
+    if (!temporaryPassword) {
       displayAlert();
       return;
     }
-    verifyUser({ OTP });
+
+    const userId = user._id;
+    const verifyDetails = { temporaryPassword, userId };
+    verifyUser(verifyDetails);
 
     setTimeout(() => {
       navigate("/login");
@@ -40,8 +44,8 @@ const Verification = () => {
 
         <div className="input-fields">
           <OtpInput
-            value={OTP}
-            onChange={setOTP}
+            value={temporaryPassword}
+            onChange={setTemporaryPassword}
             otpType="number"
             numInputs={5}
             inputStyle="otp-form-input"

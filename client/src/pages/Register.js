@@ -5,10 +5,15 @@ import { useAppContext } from "../context/appContext";
 import { useNavigate } from "react-router-dom";
 
 const initialState = {
-  name: "",
+  firstName: "",
+  lastName: "",
   email: "",
   password: "",
-  cpassword: "",
+  cPassword: "",
+  dateOfBirth: "",
+  mobile: "",
+  accountType: "",
+  status: "",
   //   isMember: true,
   showAlert: false,
 };
@@ -83,7 +88,7 @@ const Register = () => {
         {!values.isMember && (
           <FormRow
             type="text"
-            name="name"
+            name="fisrtName"
             value={values.name}
             handleChange={handleChange}
           />
