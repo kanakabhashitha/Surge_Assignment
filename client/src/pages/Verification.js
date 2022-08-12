@@ -1,66 +1,39 @@
-import { React, useState } from "react";
-import { Logo, Alert } from "../components";
+import { React, useState, useEffect } from "react";
+import { Loading, Alert } from "../components";
 import { useAppContext } from "../context/appContext";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import OtpInput from "react-otp-input";
-import Wrapper from "../assets/wrappers/VerifyForm";
+import success from "../assets/images/success.svg";
+import Wrapper from "../assets/wrappers/VerifyPage";
 
 const Verification = () => {
-  const { verifyUser, showAlert, displayAlert, isLoading } = useAppContext();
-  const [temporaryPassword, setTemporaryPassword] = useState("");
+  const { verifyUser, showAlert, displayAlert, isLoading, verify } =
+    useAppContext();
   const navigate = useNavigate();
   const param = useParams();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!temporaryPassword) {
-      displayAlert();
-      return;
-    }
-
+  const emailVerify = () => {
     const id = param.id;
     const url = `http://localhost:3000/api/v1/auth/verify/${id}`;
-    const verifyDetails = { temporaryPassword, url };
-    verifyUser(verifyDetails);
+    verifyUser(url);
+  };
+
+  useEffect(() => {
+    emailVerify();
+
+    displayAlert();
 
     setTimeout(() => {
       navigate("/register");
     }, 4000);
-  };
+  }, [param, navigate]);
 
   return (
     <Wrapper>
-      <form className="form" onSubmit={handleSubmit}>
-        <Logo />
-
-        <h3> Verify your email address</h3>
-        <hr />
-        <h5>
-          A verification code has been sent to the email address you entered
-        </h5>
-        <article>
-          Please check your inbox and enter the verification code below to
-          verify your email address. The code will expire in an one hour.
-        </article>
-
-        <div className="input-fields">
-          <OtpInput
-            value={temporaryPassword}
-            onChange={setTemporaryPassword}
-            otpType="number"
-            numInputs={5}
-            inputStyle="otp-form-input"
-            separator={<span> </span>}
-          />
-        </div>
-
-        {showAlert && <Alert />}
-
-        <button className="btn btn-block" type="submit" disabled={isLoading}>
-          {isLoading ? "Please Wait..." : "verify"}
-        </button>
-      </form>
+      {verify && <img src={success} alt="success_img" />}
+      {isLoading && <Loading center class="loading" />}
+      {showAlert && <Alert />}
+      <h1>Email verified successfully</h1>
     </Wrapper>
   );
 };

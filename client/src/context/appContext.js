@@ -26,6 +26,7 @@ const initialState = {
   alertType: "",
   user: user ? JSON.parse(user) : null,
   token: token,
+  verify: false,
 };
 
 const AppContext = React.createContext();
@@ -93,17 +94,17 @@ const AppProvider = ({ children }) => {
   };
 
   //verified user
-  const verifyUser = async (verifyDetails) => {
+  const verifyUser = async (url) => {
     dispatch({ type: VERIFY_USER_BEGIN });
 
     try {
-      const response = await axios.post(verifyDetails.url, verifyDetails);
+      const response = await axios.post(url);
       console.log(response);
-      const { token } = response.data;
+      const { verify } = response.data;
 
       dispatch({
         type: VERIFY_USER_SUCCESS,
-        payload: { token },
+        payload: { verify },
       });
     } catch (error) {
       console.log(error.response);

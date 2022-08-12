@@ -34,11 +34,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
     minlength: 3,
     select: false,
+    required: [true, "Please provide  password"],
   },
 
   dateOfBirth: {
     type: Date,
-    default: "1995-04-18",
+    default: Date.now(),
     trim: true,
   },
 
@@ -85,4 +86,5 @@ UserSchema.methods.comparePassword = async function (candidatePassword) {
   const isMatch = await bcrypt.compare(candidatePassword, this.password);
   return isMatch;
 };
+
 export default mongoose.model("User", UserSchema);

@@ -22,13 +22,17 @@ const addUser = async (req, res, next) => {
   try {
     const OTP = generateOtp();
 
-    // const user = new User({});
-    const user = await User.create(req.body);
+    const user = new User({
+      firstName: firstName,
+      email: email,
+      password: OTP,
+    });
+
+    await user.save();
     const token = user.createJWT();
 
     const verification = new Verification({
       createdBy: user._id,
-      temporaryPassword: OTP,
     });
 
     await verification.save();
@@ -57,15 +61,10 @@ const addUser = async (req, res, next) => {
 
 const verifyEmail = async (req, res, next) => {
   try {
-    const { temporaryPassword } = req.body;
     const { id: userId } = req.params;
 
-    if (!temporaryPassword || !userId) {
-      const err = new BadRequestError("Please provide all values");
-      next(err);
-    }
+    const user = await User.findOne({ _id: userId });
 
-    const user = await User.findOne({ userId });
     if (!user) {
       throw new UnAuthenticatedError("Invalid Credentials");
     }
@@ -75,26 +74,19 @@ const verifyEmail = async (req, res, next) => {
       next(err);
     }
 
-    const TmpToken = await Verification.findOne({ createdBy: user._id });
-    if (user.verify) {
+    const verifyUser = await Verification.findOne({ createdBy: user._id });
+    if (!verifyUser) {
       const err = new BadRequestError("Sorry! user not found");
       next(err);
     }
 
-    const isTokenCorrect = await TmpToken.compareTemporaryPassword(
-      temporaryPassword
-    );
-
-    if (!isTokenCorrect) {
-      throw new UnAuthenticatedError("Invalid temporary password");
-    }
-
     user.verify = true;
-
-    await Verification.findByIdAndDelete(TmpToken._id);
+    await Verification.findByIdAndDelete(verifyUser._id);
     await user.save();
 
-    res.status(200).json({ msg: "Verification successfully" });
+    res
+      .status(200)
+      .json({ verify: user.verify, msg: "Verification successfully" });
 
     mailTransport().sendMail({
       from: process.env.MAILTRAP_USER,
@@ -129,33 +121,51 @@ const login = async (req, res, next) => {
   }
 };
 
-const updateUser = async (req, res, next) => {
+const resetUser = async (req, res, next) => {
   try {
     const {
       firstName,
       lastName,
       email,
-      password,
+      tempPassword,
+      newPassword,
+      confirmPassword,
       dateOfBirth,
       mobile,
-      status,
     } = req.body;
 
-    if (!firstName || !lastName || !email || !dateOfBirth || !mobile) {
+    if (
+      !firstName ||
+      !lastName ||
+      !dateOfBirth ||
+      !mobile ||
+      !tempPassword ||
+      !newPassword ||
+      !confirmPassword
+    ) {
       throw new BadRequestError("Please provide all values");
     }
 
-    const user = await User.findOne({ _id: req.user.userId });
+    const user = await User.findOne({ email }).select("+password");
+
+    if (!confirmPassword === newPassword) {
+      const err = new BadRequestError("Password is mismatch");
+      next(err);
+    }
+
+    const isTempPassCorrect = await user.comparePassword(tempPassword);
+    if (!isTempPassCorrect) {
+      throw new UnAuthenticatedError("Invalid temporary password");
+    }
 
     user.firstName = firstName;
     user.lastName = lastName;
-    user.email = email;
     user.dateOfBirth = dateOfBirth;
     user.mobile = mobile;
-    user.status = status;
+    user.status = true;
+    user.password = newPassword;
 
     await user.save();
-
     const token = user.createJWT();
 
     res.status(200).json({ user, token });
@@ -164,4 +174,4 @@ const updateUser = async (req, res, next) => {
   }
 };
 
-export { addUser, verifyEmail, login, updateUser };
+export { addUser, verifyEmail, login, resetUser };

@@ -8,11 +8,6 @@ const VerificationSchema = new mongoose.Schema({
     required: true,
   },
 
-  temporaryPassword: {
-    type: String,
-    required: true,
-  },
-
   verify: {
     type: Boolean,
     default: false,
@@ -25,19 +20,4 @@ const VerificationSchema = new mongoose.Schema({
   },
 });
 
-VerificationSchema.pre("save", async function () {
-  if (!this.isModified("temporaryPassword")) return;
-  const salt = await bcrypt.genSalt(10);
-  this.temporaryPassword = await bcrypt.hash(this.temporaryPassword, salt);
-});
-
-VerificationSchema.methods.compareTemporaryPassword = async function (
-  candidatePassword
-) {
-  const isMatch = await bcrypt.compare(
-    candidatePassword,
-    this.temporaryPassword
-  );
-  return isMatch;
-};
 export default mongoose.model("VerificationAccount", VerificationSchema);

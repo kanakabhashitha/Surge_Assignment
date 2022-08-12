@@ -75,8 +75,8 @@ const reducer = (state, action) => {
   if (action.type === VERIFY_USER_SUCCESS) {
     return {
       ...state,
-      token: action.payload.token,
-      isLoading: false,
+      verify: action.payload.verify,
+      isLoading: true,
       showAlert: true,
       alertType: "success",
       alertText: "Verify Successful! Redirecting...",

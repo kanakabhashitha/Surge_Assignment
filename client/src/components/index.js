@@ -5,5 +5,15 @@ import Alert from "../components/Alert";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import NavLinks from "../components/NavLinks";
+import Loading from "../components/Loading";
 
-export { Logo, FormRow, FormRowSelect, Alert, Sidebar, NavLinks, Navbar };
+export {
+  Logo,
+  FormRow,
+  FormRowSelect,
+  Alert,
+  Sidebar,
+  NavLinks,
+  Navbar,
+  Loading,
+};
