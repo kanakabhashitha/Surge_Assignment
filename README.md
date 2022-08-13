@@ -1,6 +1,6 @@
 # Surge_Assignment
 
-## front-end application run instruction
+## front-end application run instructions
 
 01) To start, open a project in your preferred editor or command prompt.
 02) Then type in the same terminal as "**cd client**" and connect to the client directory.
@@ -8,7 +8,7 @@
 04) Next, type in the same terminal "**npm start**" and run and open the react app.
 
 
-## Back-end application run instruction
+## Back-end application run instructions
 
 01) Go to the server folder and rename "**.env.temp**" as "**.env**".
 02) Now you have to login to **MongoDB Atlas Database** (https://account.mongodb.com/account/login?signedOut=true) and create the database that you want. If you do not have an account, please make sure to register with it.
