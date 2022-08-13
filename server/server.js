@@ -6,6 +6,7 @@ import connectBD from "./db/connect.js";
 
 //routers
 import authRouter from "./routes/authRoutes.js";
+import noteRouter from "./routes/noteRoutes.js";
 
 //middleware
 import notFoundMiddleware from "./middleware/not-found.js";
@@ -19,7 +20,7 @@ app.use(bodyParser.json());
 
 //routers
 app.use("/api/v1/auth", authRouter);
-// app.use("/api/v1/jobs", authenticateUser, jobsRouter);
+app.use("/api/v1/notes", authenticateUser, noteRouter);
 
 // middleware
 app.use(errorHandlerMiddleware);
