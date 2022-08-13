@@ -18,7 +18,7 @@ const NoteRow = ({ _id, title, subject, deadline, description }) => {
 
         <td className="actions">
           <Link
-            to="/edit-doc"
+            to="/edit-note"
             className="btn edit-btn"
             onClick={() => setEdiNotes(_id)}
           >

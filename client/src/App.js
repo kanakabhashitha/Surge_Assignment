@@ -8,6 +8,7 @@ import {
   AddNotes,
   AllNotes,
   WelcomePage,
+  EditNote,
 } from "./pages/dashboard";
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Route path="all-user" element={<AllUser />}></Route>
           <Route path="add-notes" element={<AddNotes />}></Route>
           <Route path="all-notes" element={<AllNotes />}></Route>
+          <Route path="edit-note" element={<EditNote />}></Route>
           <Route path="/" element={<WelcomePage />}></Route>
         </Route>
         <Route path="/reset-user/:id" element={<ResetUser />} />

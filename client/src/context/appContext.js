@@ -302,11 +302,12 @@ const AppProvider = ({ children }) => {
     dispatch({ type: SET_EDIT_NOTE, payload: { id } });
   };
 
-  const editDocument = async (formData) => {
+  const editNotes = async (formData) => {
+    console.log(formData);
     dispatch({ type: EDIT_NOTE_BEGIN });
 
     try {
-      await axios.put(`/api/v1/notes/${state.editDocId}`, formData, {
+      await axios.put(`/api/v1/notes/${state.editNoteId}`, formData, {
         headers: {
           Authorization: `Bearer ${state.token}`,
         },
@@ -353,7 +354,7 @@ const AppProvider = ({ children }) => {
         getAllNotes,
         handleChange,
         setEdiNotes,
-        editDocument,
+        editNotes,
       }}
     >
       {children}

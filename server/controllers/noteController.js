@@ -80,7 +80,7 @@ const updateNotes = async (req, res, next) => {
     const { id: noteId } = req.params;
     const { subject, title, description, deadline } = req.body;
 
-    if (!subject || !title || !description || deadline) {
+    if (!subject || !title || !description || !deadline) {
       const err = new BadRequestError("Please provide all values");
       next(err);
     }

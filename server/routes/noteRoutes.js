@@ -9,6 +9,6 @@ import {
 } from "../controllers/noteController.js";
 
 router.route("/").post(addNotes).get(getAllNotes);
-router.route("/:id").delete(deleteNote).patch(updateNotes);
+router.route("/:id").delete(deleteNote).put(updateNotes);
 
 export default router;
