@@ -5,7 +5,7 @@ import { CgNotes } from "react-icons/cg";
 
 const StudentTab = () => {
   return (
-    <>
+    <div className="nav-links">
       <NavLink
         to="all-notes"
         className={({ isActive }) =>
@@ -29,7 +29,7 @@ const StudentTab = () => {
         </span>
         add notes
       </NavLink>
-    </>
+    </div>
   );
 };
 

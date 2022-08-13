@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Wrapper from "../assets/wrappers/Sidebar";
 import { useAppContext } from "../context/appContext";
 import { AdminTab, StudentTab } from "../components/index";
@@ -15,7 +15,7 @@ function Sidebar(props) {
           <header>
             <Logo />
           </header>
-          {user.firstName === "Admin" ? <AdminTab /> : <StudentTab />}
+          {user.accountType === "Admin" ? <AdminTab /> : <StudentTab />}
         </div>
       </div>
     </Wrapper>

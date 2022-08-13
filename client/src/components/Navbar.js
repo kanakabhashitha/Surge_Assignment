@@ -14,7 +14,9 @@ function Navbar(props) {
       <div className="nav-center">
         <div>
           <Logo />
-          <h3 className="logo-text">dashboard</h3>
+          <h3 className="logo-text">
+            {user.accountType === "Admin" && "dashboard"}
+          </h3>
         </div>
 
         <div className="btn-container">

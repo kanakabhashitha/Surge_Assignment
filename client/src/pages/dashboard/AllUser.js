@@ -1,7 +1,13 @@
 import React from "react";
+import { UserContainer, SearchContainer } from "../../components";
 
 const AllUser = () => {
-  return <div>AllUser</div>;
+  return (
+    <>
+      <SearchContainer />
+      <UserContainer />
+    </>
+  );
 };
 
 export default AllUser;

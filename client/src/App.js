@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Login, ResetUser, Error, Verification, ProtectedRoute } from "./pages";
+
 import {
   AddUser,
   SharedLayout,
@@ -21,7 +22,7 @@ function App() {
           }
         >
           <Route path="add-user" element={<AddUser />}></Route>
-          <Route path="all-user" element={<AddUser />}></Route>
+          <Route path="/" element={<AllUser />}></Route>
           <Route path="add-notes" element={<AddNotes />}></Route>
           <Route path="all-notes" element={<AllNotes />}></Route>
         </Route>

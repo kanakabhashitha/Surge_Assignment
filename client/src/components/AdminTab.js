@@ -5,9 +5,9 @@ import { FiUsers } from "react-icons/fi";
 
 const AdminTab = () => {
   return (
-    <>
+    <div className="nav-links">
       <NavLink
-        to="all-user"
+        to="/"
         className={({ isActive }) =>
           isActive ? "nav-link active" : "nav-link"
         }
@@ -29,7 +29,7 @@ const AdminTab = () => {
         </span>
         add student
       </NavLink>
-    </>
+    </div>
   );
 };
 

@@ -7,6 +7,8 @@ import Navbar from "../components/Navbar";
 import Loading from "../components/Loading";
 import AdminTab from "../components/AdminTab";
 import StudentTab from "../components/StudentTab";
+import UserContainer from "../components/UserContainer";
+import SearchContainer from "../components/SearchContainer";
 
 export {
   Logo,
@@ -18,4 +20,6 @@ export {
   Loading,
   AdminTab,
   StudentTab,
+  UserContainer,
+  SearchContainer,
 };

@@ -51,10 +51,9 @@ const addUser = async (req, res, next) => {
 
     res.status(201).json({
       user: {
-        firstName: user.firstName,
-        email: user.email,
+        firstName: "Admin",
+        accountType: "Admin",
         status: user.status,
-        _id: user._id,
       },
       token,
       msg: "User add successfully",
@@ -160,11 +159,11 @@ const resetUser = async (req, res, next) => {
       id,
       firstName,
       lastName,
+      mobile,
       tempPassword,
       newPassword,
       confirmPassword,
       dateOfBirth,
-      mobile,
     } = req.body;
 
     if (
@@ -222,4 +221,54 @@ const resetUser = async (req, res, next) => {
   }
 };
 
-export { addUser, verifyEmail, login, resetUser };
+const getAllUser = async (req, res, next) => {
+  try {
+    const { sort, search } = req.query;
+
+    const queryObject = {};
+
+    // let result = User.find({ status: true });
+
+    // search from first name
+    if (search) {
+      queryObject.firstName = { $regex: search, $options: "i" };
+    }
+
+    queryObject.status = true;
+    let result = User.find(queryObject);
+
+    //result sort
+
+    if (sort === "latest") {
+      result = result.sort("-createdAt");
+    }
+    if (sort === "oldest") {
+      result = result.sort("createdAt");
+    }
+    if (sort === "a-z") {
+      result = result.sort("firstName");
+    }
+    if (sort === "z-a") {
+      result = result.sort("-firstName");
+    }
+
+    // setup pagination
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
+
+    result = result.skip(skip).limit(limit);
+
+    const users = await result;
+
+    const totalUser = await User.countDocuments(queryObject);
+
+    const numOfPages = Math.ceil(totalUser / limit);
+
+    res.status(200).json({ users, totalUser, numOfPages });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { addUser, verifyEmail, login, resetUser, getAllUser };

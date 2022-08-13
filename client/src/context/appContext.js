@@ -18,6 +18,10 @@ import {
   LOGOUT_USER,
   CLEAR_VALUES,
   HANDLE_CHANGE,
+  GET_USER_BEGIN,
+  GET_USER_SUCCESS,
+  CLEAR_FILTERS,
+  CHANGE_PAGE,
 } from "./actions";
 
 import reducer from "./reducer";
@@ -32,8 +36,18 @@ const initialState = {
   alertText: "",
   alertType: "",
   user: user ? JSON.parse(user) : null,
+  users: [],
   token: token,
   verify: false,
+  totalUser: 0,
+  numOfPages: 1,
+  page: 1,
+  isEditing: false,
+  search: "",
+  searchStatus: "all",
+  searchType: "all",
+  sort: "latest",
+  sortOptions: ["latest", "oldest", "a-z", "z-a"],
 };
 
 const AppContext = React.createContext();
@@ -87,9 +101,6 @@ const AppProvider = ({ children }) => {
         type: ADD_USER_SUCCESS,
         payload: { user, token },
       });
-
-      //local storage
-      addUserToLocalStorage({ user, token });
     } catch (error) {
       console.log(error.response);
       dispatch({
@@ -102,6 +113,7 @@ const AppProvider = ({ children }) => {
 
   //verified user
   const verifyUser = async (url) => {
+    removeUserFromLocalStorage();
     dispatch({ type: VERIFY_USER_BEGIN });
 
     try {
@@ -140,7 +152,8 @@ const AppProvider = ({ children }) => {
         type: RESET_USER_SUCCESS,
         payload: { user, token },
       });
-      addUserToLocalStorage({ user, token });
+
+      removeUserFromLocalStorage();
     } catch (error) {
       if (error.response.status !== 401) {
         dispatch({
@@ -186,6 +199,49 @@ const AppProvider = ({ children }) => {
     removeUserFromLocalStorage();
   };
 
+  //get all users
+  const getAllUser = async () => {
+    const { search, page, sort } = state;
+
+    let url = `/api/v1/auth?page=${page}&sort=${sort}`;
+
+    if (search) {
+      url = url + `&search=${search}`;
+    }
+
+    dispatch({ type: GET_USER_BEGIN });
+
+    try {
+      const { data } = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${state.token}`,
+        },
+      });
+
+      const { users, totalUser, numOfPages } = data;
+
+      dispatch({
+        type: GET_USER_SUCCESS,
+        payload: {
+          users,
+          totalUser,
+          numOfPages,
+        },
+      });
+    } catch (error) {
+      console.log(error.response);
+      // logoutUser();
+    }
+    clearAlert();
+  };
+
+  const clearFilters = () => {
+    dispatch({ type: CLEAR_FILTERS });
+  };
+  const changePage = (page) => {
+    dispatch({ type: CHANGE_PAGE, payload: { page } });
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -196,6 +252,11 @@ const AppProvider = ({ children }) => {
         resetUser,
         loginUser,
         logoutUser,
+        getAllUser,
+        handleChange,
+        clearValues,
+        clearFilters,
+        changePage,
       }}
     >
       {children}

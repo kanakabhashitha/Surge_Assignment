@@ -14,6 +14,12 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
   LOGOUT_USER,
+  GET_USER_BEGIN,
+  GET_USER_SUCCESS,
+  HANDLE_CHANGE,
+  CLEAR_VALUES,
+  CLEAR_FILTERS,
+  CHANGE_PAGE,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -150,6 +156,57 @@ const reducer = (state, action) => {
       user: null,
       token: null,
     };
+  }
+
+  if (action.type === GET_USER_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false };
+  }
+
+  if (action.type === GET_USER_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      users: action.payload.users,
+      totalUser: action.payload.totalUser,
+      numOfPages: action.payload.numOfPages,
+    };
+  }
+
+  if (action.type === HANDLE_CHANGE) {
+    return {
+      ...state,
+      page: 1,
+      [action.payload.name]: action.payload.value,
+    };
+  }
+
+  // if (action.type === CLEAR_VALUES) {
+  //   const initialState = {
+  //     isEditing: false,
+  //     editJobId: '',
+  //     position: '',
+  //     company: '',
+  //     jobLocation: state.userLocation,
+  //     jobType: 'full-time',
+  //     status: 'pending',
+  //   }
+
+  //   return {
+  //     ...state,
+  //     ...initialState,
+  //   }
+  // }
+
+  if (action.type === CLEAR_FILTERS) {
+    return {
+      ...state,
+      search: "",
+      sort: "latest",
+    };
+  }
+
+  if (action.type === CHANGE_PAGE) {
+    return { ...state, page: action.payload.page };
   }
 };
 

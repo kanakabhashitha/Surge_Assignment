@@ -83,7 +83,7 @@ const ResetUser = () => {
   useEffect(() => {
     if (user && user.status === true) {
       setTimeout(() => {
-        navigate("/");
+        navigate("/login");
       }, 3000);
     }
   }, [user, navigate]);
@@ -159,6 +159,7 @@ const ResetUser = () => {
             value={tempPassword}
             onChange={setTempPassword}
             otpType="number"
+            isInputSecure="true"
             numInputs={5}
             inputStyle="otp-form-input"
             separator={<span> </span>}
