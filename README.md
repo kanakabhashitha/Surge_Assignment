@@ -23,4 +23,10 @@
 02) Now, type in the same terminal as "**npm i**" 
 03) Finaly, type the same terminal as "**nodemon server**" end enter
 
+## admin instructions
+
+1. first you have login as a admin. to do that use following credentials
+   **admin email : admin@gmail.com**
+   **admin password : admin**
+
 
