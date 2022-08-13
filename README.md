@@ -30,5 +30,5 @@
    **admin password : admin**
 <br/>
 
-**enjoy** :grinning: :grinning: :slightly_smiling_faces:
+**enjoy** :grinning: :grinning: 
 
