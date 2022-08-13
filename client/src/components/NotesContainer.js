@@ -4,6 +4,7 @@ import Loading from "./Loading";
 import Wrapper from "../assets/wrappers/userContainer";
 import NoteRow from "./NoteRow";
 import { Table } from "react-bootstrap";
+import PageBtnContainer from "./PageBtnContainer";
 
 const NotesContainer = () => {
   const {
@@ -58,7 +59,7 @@ const NotesContainer = () => {
         </Table>
       </div>
 
-      {/* {numOfPages > 1 && <PageBtnContainer />} */}
+      {numOfPages > 1 && <PageBtnContainer />}
     </Wrapper>
   );
 };

@@ -12,8 +12,17 @@ const generateOtp = () => {
 const mailTransport = () =>
   nodemailer.createTransport({
     host: "smtp.mailtrap.io",
-    // service: "gmail",
     port: 2525,
+
+    /**
+     * if user gmail credentials uncomment this following comments and
+     * comment is other host and port
+     * **/
+
+    // host: "smtp.gmail.com",
+    // port: 465,
+    // secure: true,
+
     auth: {
       user: process.env.MAILTRAP_USER_NAME,
       pass: process.env.MAILTRAP_PASSWORD,

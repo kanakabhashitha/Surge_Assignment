@@ -4,6 +4,7 @@ import Loading from "./Loading";
 import Wrapper from "../assets/wrappers/userContainer";
 import UserRow from "./UserRow";
 import { Table } from "react-bootstrap";
+import PageBtnContainer from "./PageBtnContainer";
 
 const UserContainer = () => {
   const {
@@ -58,7 +59,7 @@ const UserContainer = () => {
         </Table>
       </div>
 
-      {/* {numOfPages > 1 && <PageBtnContainer />} */}
+      {numOfPages > 1 && <PageBtnContainer />}
     </Wrapper>
   );
 };

@@ -118,6 +118,7 @@ const AppProvider = ({ children }) => {
   //verified user
   const verifyUser = async (url) => {
     removeUserFromLocalStorage();
+
     dispatch({ type: VERIFY_USER_BEGIN });
 
     try {
@@ -143,6 +144,8 @@ const AppProvider = ({ children }) => {
 
   //reset user details
   const resetUser = async (currentUser) => {
+    removeUserFromLocalStorage();
+
     dispatch({ type: RESET_USER_BEGIN });
     try {
       const response = await axios.patch(
@@ -156,8 +159,6 @@ const AppProvider = ({ children }) => {
         type: RESET_USER_SUCCESS,
         payload: { user, token },
       });
-
-      removeUserFromLocalStorage();
     } catch (error) {
       if (error.response.status !== 401) {
         dispatch({
