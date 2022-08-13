@@ -17,13 +17,13 @@
 05) Or you can use **Google credentials**. To do that, enter your **Gmail password** and **Email address** into the **.env** "**GOOGLE_USER**" and "**GOOGLE_PASSWORD**" places. If you're using Google credentials, please make sure to **turn off** **Google security**. and you have to uncomment **Mail.js** (path : server -> utils -> Mail.js) uncomment part. 
 06)then enter your frontend localhost to "**DOMAIN**".
 
-### run backend
+### Run backend
 
 01) Type the terminal as "**cd server**" and enter the server directory.
 02) Now, type in the same terminal as "**npm i**" 
 03) Finaly, type the same terminal as "**nodemon server**" end enter
 
-## admin instructions
+## Admin login instructions
 
 1. first you have login as a admin. to do that use following credentials<br/>
    **admin email : admin@gmail.com**<br/>
