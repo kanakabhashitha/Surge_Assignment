@@ -16,10 +16,18 @@ import {
   LOGOUT_USER,
   GET_USER_BEGIN,
   GET_USER_SUCCESS,
-  HANDLE_CHANGE,
-  CLEAR_VALUES,
   CLEAR_FILTERS,
   CHANGE_PAGE,
+  ADD_NOTES_BEGIN,
+  ADD_NOTES_SUCCESS,
+  ADD_NOTES_ERROR,
+  GET_NOTES_BEGIN,
+  GET_NOTES_SUCCESS,
+  HANDLE_CHANGE,
+  SET_EDIT_NOTE,
+  EDIT_NOTE_BEGIN,
+  EDIT_NOTE_SUCCESS,
+  EDIT_NOTE_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -172,31 +180,6 @@ const reducer = (state, action) => {
     };
   }
 
-  if (action.type === HANDLE_CHANGE) {
-    return {
-      ...state,
-      page: 1,
-      [action.payload.name]: action.payload.value,
-    };
-  }
-
-  // if (action.type === CLEAR_VALUES) {
-  //   const initialState = {
-  //     isEditing: false,
-  //     editJobId: '',
-  //     position: '',
-  //     company: '',
-  //     jobLocation: state.userLocation,
-  //     jobType: 'full-time',
-  //     status: 'pending',
-  //   }
-
-  //   return {
-  //     ...state,
-  //     ...initialState,
-  //   }
-  // }
-
   if (action.type === CLEAR_FILTERS) {
     return {
       ...state,
@@ -207,6 +190,87 @@ const reducer = (state, action) => {
 
   if (action.type === CHANGE_PAGE) {
     return { ...state, page: action.payload.page };
+  }
+
+  if (action.type === ADD_NOTES_BEGIN) {
+    return { ...state, isLoading: true };
+  }
+
+  if (action.type === ADD_NOTES_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: "New Note Created!",
+    };
+  }
+
+  if (action.type === ADD_NOTES_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
+
+  if (action.type === GET_NOTES_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false };
+  }
+
+  if (action.type === GET_NOTES_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      notes: action.payload.notes,
+      totalNote: action.payload.totalNote,
+      numOfPages: action.payload.numOfPages,
+    };
+  }
+
+  if (action.type === HANDLE_CHANGE) {
+    return {
+      ...state,
+      page: 1,
+      [action.payload.name]: action.payload.value,
+    };
+  }
+
+  if (action.type === SET_EDIT_NOTE) {
+    return {
+      ...state,
+      isEditing: true,
+      editNoteId: action.payload.id,
+    };
+  }
+
+  if (action.type === EDIT_NOTE_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+    };
+  }
+
+  if (action.type === EDIT_NOTE_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: "Note Updated!",
+    };
+  }
+
+  if (action.type === EDIT_NOTE_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
   }
 };
 

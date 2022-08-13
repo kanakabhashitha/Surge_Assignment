@@ -8,6 +8,7 @@ import Loading from "../components/Loading";
 import AdminTab from "../components/AdminTab";
 import StudentTab from "../components/StudentTab";
 import UserContainer from "../components/UserContainer";
+import NotesContainer from "../components/NotesContainer";
 import SearchContainer from "../components/SearchContainer";
 
 export {
@@ -22,4 +23,5 @@ export {
   StudentTab,
   UserContainer,
   SearchContainer,
+  NotesContainer,
 };
