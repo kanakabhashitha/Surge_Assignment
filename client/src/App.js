@@ -7,6 +7,7 @@ import {
   AllUser,
   AddNotes,
   AllNotes,
+  WelcomePage,
 } from "./pages/dashboard";
 
 function App() {
@@ -22,9 +23,10 @@ function App() {
           }
         >
           <Route path="add-user" element={<AddUser />}></Route>
-          <Route path="/" element={<AllUser />}></Route>
+          <Route path="all-user" element={<AllUser />}></Route>
           <Route path="add-notes" element={<AddNotes />}></Route>
           <Route path="all-notes" element={<AllNotes />}></Route>
+          <Route path="/" element={<WelcomePage />}></Route>
         </Route>
         <Route path="/reset-user/:id" element={<ResetUser />} />
         <Route path="/verify/:id" element={<Verification />} />

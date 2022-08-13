@@ -7,7 +7,7 @@ const AdminTab = () => {
   return (
     <div className="nav-links">
       <NavLink
-        to="/"
+        to="all-user"
         className={({ isActive }) =>
           isActive ? "nav-link active" : "nav-link"
         }
