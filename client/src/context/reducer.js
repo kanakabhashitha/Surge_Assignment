@@ -28,6 +28,7 @@ import {
   EDIT_NOTE_BEGIN,
   EDIT_NOTE_SUCCESS,
   EDIT_NOTE_ERROR,
+  DELETE_NOTE_BEGIN,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -271,6 +272,10 @@ const reducer = (state, action) => {
       alertType: "danger",
       alertText: action.payload.msg,
     };
+  }
+
+  if (action.type === DELETE_NOTE_BEGIN) {
+    return { ...state, isLoading: true };
   }
 };
 

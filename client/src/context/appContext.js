@@ -30,6 +30,7 @@ import {
   EDIT_NOTE_BEGIN,
   EDIT_NOTE_SUCCESS,
   EDIT_NOTE_ERROR,
+  DELETE_NOTE_BEGIN,
 } from "./actions";
 
 import reducer from "./reducer";
@@ -323,7 +324,22 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  //
+  //delete note
+  const deleteNotes = async (id) => {
+    dispatch({ type: DELETE_NOTE_BEGIN });
+
+    try {
+      await axios.delete(`/api/v1/notes/${id}`, {
+        headers: {
+          Authorization: `Bearer ${state.token}`,
+        },
+      });
+      getAllNotes();
+    } catch (error) {
+      loginUser();
+    }
+  };
+
   //
   const clearFilters = () => {
     dispatch({ type: CLEAR_FILTERS });
@@ -355,6 +371,7 @@ const AppProvider = ({ children }) => {
         handleChange,
         setEdiNotes,
         editNotes,
+        deleteNotes,
       }}
     >
       {children}
